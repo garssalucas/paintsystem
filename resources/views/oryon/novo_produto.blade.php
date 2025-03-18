@@ -1,3 +1,9 @@
+@extends('layouts.main')
+
+@section('title', 'Cadastrar Produto Oryon')
+
+@section('content')
+
 <H1>Novo Produto</H1>
 <form action="{{ route('oryon.store') }} " method='POST'>
     @csrf
@@ -27,3 +33,4 @@
     <br>
     <button type='submit'>Salvar</button>   
 </form>
+@endsection
