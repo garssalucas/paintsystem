@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('oryon.layouts.main')
 
 @section('title', 'Lista de Produtos Oryon')
 
@@ -6,17 +6,7 @@
 
     <a href="{{ route('oryon.new') }}">Novo Produto</></a>
         <h1>Lista de Produtos Oryon</h1>
-
-        <!-- Mensagens de sucesso ou erro -->
-        @if(session('success'))
-            <p style="color: green;">{{ session('success') }}</p>
-        @endif
-
-        @if(session('error'))
-            <p style="color: red;">{{ session('error') }}</p>
-        @endif
-
-        <!-- Tabela para exibir os produtos -->
+        <x-alert/>
         <table border="1">
             <thead>
                 <tr>

@@ -8,6 +8,7 @@ use League\Flysystem\Filesystem;
 use League\Flysystem\Ftp\FtpAdapter;
 use League\Flysystem\Ftp\FtpConnectionOptions;
 use Illuminate\Http\Request; 
+use App\Http\Requests\StoreOryonRequest;
 
 class OryonController extends Controller
 {
@@ -22,24 +23,10 @@ class OryonController extends Controller
         return view('oryon.novo_produto'); 
     }
 
-    public function store(Request $request)
+    public function store(StoreOryonRequest $request)
     {
-        // Valida os dados do formulário
-        $data = $request->validate([
-            'codigo' => 'required|unique:oryons',
-            'descricao' => 'required',
-            'preco' => 'required|numeric',
-            'categoria' => 'required',
-            'fornecedor' => 'required',
-            'peso' => 'nullable|numeric',
-            'preco_compra' => 'required|numeric',
-            'estoque' => 'required|numeric',
-        ]);
-
-        // Cria um novo produto com os dados validados
-        Oryon::create($data);
-
-        // Redireciona para a página de produtos com uma mensagem de sucesso
+        Oryon::create($request->all());
+        
         return redirect()->route('oryon.index')->with('success', 'Produto cadastrado com sucesso!');
     }
 
