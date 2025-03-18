@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Oryon\OryonController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -16,5 +17,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+Route::get('/oryon', [OryonController::class, 'index'])->name('oryon.index'); // Para exibir os produtos
+Route::get('/importar-oryon', [OryonController::class, 'importarProdutos'])->name('oryon.importar'); // Para importar os produtos
 
 require __DIR__.'/auth.php';
