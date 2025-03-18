@@ -18,6 +18,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::get('/oryon/new', [OryonController::class, 'new'])->name('oryon.new'); // Para exibir o formulário de cadastro
+Route::post('/oryon', [OryonController::class, 'store'])->name('oryon.store'); // Para salvar o produto
 Route::get('/oryon', [OryonController::class, 'index'])->name('oryon.index'); // Para exibir os produtos
 Route::get('/importar-oryon', [OryonController::class, 'importarProdutos'])->name('oryon.importar'); // Para importar os produtos
 

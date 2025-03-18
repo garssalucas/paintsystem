@@ -13,9 +13,34 @@ class OryonController extends Controller
 {
     public function index()
     {
-        // Recupera todos os produtos da tabela 'produtos_oryon' em ordem alfabética pelo campo 'descricao'
         $produtos = Oryon::orderBy('descricao', 'asc')->paginate(30);  // Paginação com 30 itens por página
         return view('oryon.index', compact('produtos'));  // Atualizado para oryon
+    }
+
+    public function new()
+    {
+        return view('oryon.novo_produto'); 
+    }
+
+    public function store(Request $request)
+    {
+        // Valida os dados do formulário
+        $data = $request->validate([
+            'codigo' => 'required|unique:oryons',
+            'descricao' => 'required',
+            'preco' => 'required|numeric',
+            'categoria' => 'required',
+            'fornecedor' => 'required',
+            'peso' => 'nullable|numeric',
+            'preco_compra' => 'required|numeric',
+            'estoque' => 'required|numeric',
+        ]);
+
+        // Cria um novo produto com os dados validados
+        Oryon::create($data);
+
+        // Redireciona para a página de produtos com uma mensagem de sucesso
+        return redirect()->route('oryon.index')->with('success', 'Produto cadastrado com sucesso!');
     }
 
     public function importarProdutos()

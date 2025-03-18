@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Produtos Oryon</title>
 </head>
+<a href="{{ route('oryon.new') }}">Novo Produtos</a>
 <body>
     <h1>Lista de Produtos Oryon</h1>
 
