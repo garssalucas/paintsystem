@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreOryonRequest extends FormRequest
 {
@@ -14,7 +15,10 @@ class StoreOryonRequest extends FormRequest
     public function rules()
     {
         return [
-            'codigo' => 'required|unique:oryons',
+            'codigo' => [
+                'required',
+                Rule::unique('oryons', 'codigo')->ignore($this->route('id'))
+            ],
             'descricao' => 'required',
             'preco' => 'required|numeric',
             'categoria' => 'required',

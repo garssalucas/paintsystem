@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Oryon;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateOryonRequest;
 use App\Models\Oryon;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Ftp\FtpAdapter;
@@ -20,12 +21,32 @@ class OryonController extends Controller
 
     public function new()
     {
-        return view('oryon.novo_produto'); 
+        return view('oryon.create'); 
+    }
+
+    public function edit($id)
+    {
+        $produto = Oryon::find($id);
+        if (!$produto) {
+            return redirect()->route('oryon.index')->with('error', 'Produto não encontrado.');
+        }
+
+        return view('oryon.edit', compact('produto')); 
+    }
+
+    public function update(UpdateOryonRequest $request, $id)
+    {
+        if (!$produto = Oryon::find($id)) {
+            return redirect()->route('oryon.index')->with('error', 'Produto não encontrado.');
+        }
+        $produto->update($request->validated());
+        
+        return redirect()->route('oryon.index')->with('success', 'Produto atualizado com sucesso!');
     }
 
     public function store(StoreOryonRequest $request)
     {
-        Oryon::create($request->all());
+        Oryon::create($request->validated());
         
         return redirect()->route('oryon.index')->with('success', 'Produto cadastrado com sucesso!');
     }

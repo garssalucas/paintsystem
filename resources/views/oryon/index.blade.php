@@ -21,6 +21,7 @@
                                 <th>Peso</th>
                                 <th>Preço de Compra</th>
                                 <th>Estoque</th>
+                                <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -34,6 +35,7 @@
                                     <td>{{ number_format($produto->peso, 3, ',', '.') }}</td>
                                     <td>{{ number_format($produto->preco_compra, 2, ',', '.') }}</td>
                                     <td>{{ number_format($produto->estoque, 3, ',', '.') }}</td>
+                                    <td><a href="{{ route('oryon.edit', $produto->id) }}">Editar</a></td>   
                                 </tr>
                             @endforeach
                         </tbody>
