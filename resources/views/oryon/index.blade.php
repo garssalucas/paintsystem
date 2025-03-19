@@ -35,7 +35,10 @@
                                     <td>{{ number_format($produto->peso, 3, ',', '.') }}</td>
                                     <td>{{ number_format($produto->preco_compra, 2, ',', '.') }}</td>
                                     <td>{{ number_format($produto->estoque, 3, ',', '.') }}</td>
-                                    <td><a href="{{ route('oryon.edit', $produto->id) }}">Editar</a></td>   
+                                    <td>
+                                        <a href="{{ route('oryon.edit', $produto->id) }}">Editar</a>
+                                        <a href="{{ route('oryon.show', $produto->id) }}">Detalhes</a>
+                                    </td>   
                                 </tr>
                             @endforeach
                         </tbody>

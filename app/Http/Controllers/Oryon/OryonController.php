@@ -34,6 +34,24 @@ class OryonController extends Controller
         return view('oryon.edit', compact('produto')); 
     }
 
+    public function show($id)
+    {
+        if (!$produto = Oryon::find($id)) {
+            return redirect()->route('oryon.index')->with('error', 'Produto não encontrado.');
+        }
+
+        return view('oryon.show', compact('produto')); 
+    }
+
+    public function destroy($id){
+        if (!$produto = Oryon::find($id)) {
+            return redirect()->route('oryon.index')->with('error', 'Produto não encontrado.');
+        }
+        $produto->delete();
+        
+        return redirect()->route('oryon.index')->with('success', 'Produto excluído com sucesso!');
+    }
+
     public function update(UpdateOryonRequest $request, $id)
     {
         if (!$produto = Oryon::find($id)) {
