@@ -15,6 +15,10 @@ class CheckIsAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        return $next($request);
+        if (auth()->user()->isAdmin()) {
+            return $next($request);
+        }
+
+        return redirect()->route('oryon.index')->with('error', 'Você não tem permissão para deletar registros');
     }
 }

@@ -2,7 +2,7 @@
 
 return [
     'admins' => [
-        'administrador',
-        'gerente',
+        'administracao',
+        'gerencia',
     ]
 ];
