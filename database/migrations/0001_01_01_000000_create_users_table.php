@@ -21,6 +21,7 @@ return new class extends Migration
             $table->boolean('atende_rua')->default(false);
             $table->string('area');
             $table->rememberToken();
+            $table->softDeletes();
             $table->timestamps();
         });
 
