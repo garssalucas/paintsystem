@@ -21,7 +21,7 @@ return new class extends Migration
             $table->decimal('peso', 8, 2)->nullable();
             $table->decimal('preco_compra', 10, 2)->nullable();
             $table->decimal('estoque', 10, 2)->nullable();
-            $table->softDeletes();
+            //$table->softDeletes();
             $table->timestamps();
         });
     }
