@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <x-alert />
             <div class="flex justify-between items-center mb-4">
-                <div>
+                <div class="flex space-x-4">
                     <x-primary-button>
                         <a href="{{ route('oryon.new') }}">Novo Produto</a>
                     </x-primary-button>
@@ -40,39 +40,41 @@
             <br>
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <table border="1" class="table-auto">
-                        <thead>
-                            <tr>
-                                <th>Código</th>
-                                <th>Descrição</th>
-                                <th>Preço</th>
-                                <th>Categoria</th>
-                                <th>Fornecedor</th>
-                                <th>Peso</th>
-                                <th>Preço de Compra</th>
-                                <th>Estoque</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($produtos as $produto)
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 table-none md:table-fixed">
+                            <thead class="bg-gray-50 dark:bg-gray-700">
                                 <tr>
-                                    <td>{{ $produto->codigo }}</td>
-                                    <td>{{ $produto->descricao }}</td>
-                                    <td>{{ number_format($produto->preco, 2, ',', '.') }}</td>
-                                    <td>{{ $produto->categoria }}</td>
-                                    <td>{{ $produto->fornecedor }}</td>
-                                    <td>{{ number_format($produto->peso, 3, ',', '.') }}</td>
-                                    <td>{{ number_format($produto->preco_compra, 2, ',', '.') }}</td>
-                                    <td>{{ number_format($produto->estoque, 3, ',', '.') }}</td>
-                                    <td>
-                                        <a href="{{ route('oryon.edit', $produto->id) }}">Editar</a>
-                                        <a href="{{ route('oryon.show', $produto->id) }}">Detalhes</a>
-                                    </td>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Código</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Descrição</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Preço</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Categoria</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Fornecedor</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Peso</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Preço de Compra</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Estoque</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Ações</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                @foreach($produtos as $produto)
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ $produto->codigo }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ $produto->descricao }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ number_format($produto->preco, 2, ',', '.') }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ $produto->categoria }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ $produto->fornecedor }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ number_format($produto->peso, 3, ',', '.') }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ number_format($produto->preco_compra, 2, ',', '.') }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">{{ number_format($produto->estoque, 3, ',', '.') }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <a href="{{ route('oryon.edit', $produto->id) }}" class="text-indigo-600 hover:text-indigo-900">Editar</a>
+                                            <a href="{{ route('oryon.show', $produto->id) }}" class="text-indigo-600 hover:text-indigo-900 ml-2">Detalhes</a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                     {{$produtos->links()}}
                 </div>
             </div>
