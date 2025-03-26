@@ -21,12 +21,13 @@
                         <x-danger-button>
                             Menu
                             <div class="ms-1">
-                            <svg class="fill-current h-4 w-4" style="margin-right: -10px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd"
-                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        </div>
+                                <svg class="fill-current h-4 w-4" style="margin-right: -10px"
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </div>
                         </x-danger-button>
                     </x-slot>
                     <x-slot name="content">
@@ -42,7 +43,7 @@
                     </x-slot>
                 </x-dropdown>
             </div>
-            <x-text-input class="mt-1 block w-full" type="text" name="search" placeholder="Pesquisar" />
+            <x-text-input class="mt-1 block w-full" type="text" name="search" id="search" placeholder="Pesquisar" />
             <br>
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
@@ -96,9 +97,28 @@
                         </table>
                     </div>
                     <br>
-                    {{$produtos->links()}}
+                    <div class="pagination">
+                        {{$produtos->links()}}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#search').on('input', function () {
+                var query = $(this).val();
+                $.ajax({
+                    url: "{{ route('oryon.search') }}",
+                    type: "GET",
+                    data: { 'search': query },
+                    success: function (data) {
+                        $('tbody').html(data.tableData);
+                        $('.pagination').html(data.pagination);
+                    }
+                });
+            });
+        });
+    </script>
 </x-app-layout>
