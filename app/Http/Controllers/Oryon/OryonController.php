@@ -139,11 +139,12 @@ class OryonController extends Controller
     public function search(Request $request)
     {
         if ($request->ajax()) {
+            $perPage = $request->input('perPage', 30);
             $query = $request->get('search');
             $produtos = Oryon::where('descricao', 'LIKE', "%{$query}%")
                 ->orWhere('codigo', 'LIKE', "%{$query}%")
                 ->orderBy('descricao', 'asc')
-                ->paginate(30);
+                ->paginate($perPage);
 
             $output = '';
             $isOdd = true; // Inicializa a variável para alternar as classes
@@ -166,7 +167,7 @@ class OryonController extends Controller
                 </tr>';
             }
             
-            $pagination = $produtos->links()->render();
+            $pagination = $produtos->appends(['perPage' => $perPage])->links()->render();
             return response()->json(['tableData' => $output, 'pagination' => $pagination]);
         }
     }
