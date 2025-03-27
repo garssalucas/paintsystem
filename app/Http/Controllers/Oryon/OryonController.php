@@ -102,7 +102,7 @@ class OryonController extends Controller
         if ($filesystem->has($ftpFile)) {
             $content = $filesystem->read($ftpFile);
             // Garante que o conteúdo esteja em UTF-8 para evitar problemas com acentos
-            $content = utf8_encode($content);
+            $content = mb_convert_encoding($content, 'UTF-8', 'ISO-8859-1');
 
             $lines = explode("\n", $content);
             array_shift($lines);
@@ -139,12 +139,11 @@ class OryonController extends Controller
     public function search(Request $request)
     {
         if ($request->ajax()) {
-            $perPage = $request->input('perPage', 30);
             $query = $request->get('search');
             $produtos = Oryon::where('descricao', 'LIKE', "%{$query}%")
                 ->orWhere('codigo', 'LIKE', "%{$query}%")
                 ->orderBy('descricao', 'asc')
-                ->paginate($perPage);
+                ->paginate(70);
 
             $output = '';
             $isOdd = true; // Inicializa a variável para alternar as classes
@@ -167,7 +166,7 @@ class OryonController extends Controller
                 </tr>';
             }
             
-            $pagination = $produtos->appends(['perPage' => $perPage])->links()->render();
+            $pagination = $produtos->links()->render();
             return response()->json(['tableData' => $output, 'pagination' => $pagination]);
         }
     }
