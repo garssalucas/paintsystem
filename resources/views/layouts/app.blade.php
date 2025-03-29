@@ -57,7 +57,7 @@
 
         document.getElementById("theme-toggle").addEventListener("click", function () {
             const icon = document.getElementById("theme-icon");
-            icon.textContent = icon.textContent === "🌞" ? "🌙" : "🌞";
+            icon.textContent = icon.textContent === "🌙" ? "🌞" : "🌙";
         });
     </script>
 </body>

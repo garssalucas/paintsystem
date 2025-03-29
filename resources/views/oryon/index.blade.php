@@ -54,7 +54,7 @@
                                         <td class="px-6 py-4 whitespace-normal inline-flex items-center justify-start">
                                             <x-dropdown>
                                                 <x-slot name="trigger">
-                                                    <a href="#"><x-lucide-eye class="w-4 h-4 mr-2 hover:text-blue-500" /></a>
+                                                    <a class="cursor-pointer"><x-lucide-eye class="w-4 h-4 mr-2 hover:text-blue-500" /></a>
                                                 </x-slot>
                                                 <x-slot name="content">
                                                     <x-dropdown-link>
