@@ -25,7 +25,6 @@ Route::middleware('auth')->prefix('oryon')->group(function () {
     Route::get('/new', [OryonController::class, 'new'])->name('oryon.new'); // Para exibir o formulário de cadastro
     Route::get('/importar', [OryonController::class, 'importarProdutos'])->name('oryon.importar'); // Para importar os produtos
     Route::get('/search', [OryonController::class, 'search'])->name('oryon.search');
-    Route::get('/{id}', [OryonController::class, 'show'])->name('oryon.show');
     Route::put('/{id}', [OryonController::class, 'update'])->name('oryon.update');
     Route::get('/{id}/edit', [OryonController::class, 'edit'])->name('oryon.edit' );
     Route::delete('/{id}/destroy', [OryonController::class, 'destroy'])->name('oryon.destroy')->middleware(CheckIsAdmin::class);

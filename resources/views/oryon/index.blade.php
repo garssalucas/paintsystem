@@ -4,46 +4,12 @@
             {{ __('Lista de Produtos Oryon') }}
         </h2>
     </x-slot>
-    <div class="py-12">
+    <div class="pb-12 pt-4">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <x-alert />
-            <div class="flex justify-between items-center mb-4">
-                <div class="flex space-x-4">
-                    <x-primary-button>
-                        <a href="{{ route('oryon.new') }}">Novo Produto</a>
-                    </x-primary-button>
-                    <x-secondary-button>
-                        <a href="{{ route('oryon.importar') }}">Importar Produtos</a>
-                    </x-secondary-button>
-                </div>
-                <x-dropdown>
-                    <x-slot name="trigger">
-                        <x-danger-button>
-                            Menu
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" style="margin-right: -10px"
-                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </x-danger-button>
-                    </x-slot>
-                    <x-slot name="content">
-                        <x-dropdown-link href="#">
-                            Option 1
-                        </x-dropdown-link>
-                        <x-dropdown-link href="#">
-                            Option 2
-                        </x-dropdown-link>
-                        <x-dropdown-link href="#">
-                            Option 3
-                        </x-dropdown-link>
-                    </x-slot>
-                </x-dropdown>
-            </div>
-            <x-text-input class="mt-1 block w-full" type="text" name="search" id="search" placeholder="Pesquisar" />
+            <x-alert type="success" :message="session('success')" />
+            <x-alert type="error" :message="session('error')" />
+            <x-text-input class="mt-1 block w-full" type="text" name="search" id="search"
+                placeholder="Pesquisar produtos por descrição ou código" />
             <br>
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
@@ -85,11 +51,17 @@
                                         <td class="px-6 py-4 whitespace-normal">
                                             {{ number_format($produto->estoque, 0, ',', '.') }}
                                         </td>
-                                        <td class="px-6 py-4 whitespace-normal">
-                                            <a href="{{ route('oryon.edit', $produto->id) }}"
-                                                class="text-indigo-600 hover:text-indigo-900">Editar</a>
-                                            <a href="{{ route('oryon.show', $produto->id) }}"
-                                                class="text-indigo-600 hover:text-indigo-900 ml-2">Detalhes</a>
+                                        <td class="px-6 py-4 whitespace-normal inline-flex items-center">
+                                            <a href="{{ route('oryon.edit', $produto->id) }}"><x-lucide-pencil
+                                                    class="w-4 h-4 mr-2" /></a>
+                                            <form action="{{ route('oryon.destroy', $produto->id) }}" method="POST"
+                                                class="inline" onsubmit="return confirmDelete('{{ $produto->descricao }}')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="focus:outline-none">
+                                                    <x-lucide-trash-2 class="w-4 h-4" />
+                                                </button>
+                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -97,8 +69,24 @@
                         </table>
                     </div>
                     <br>
-                    <div class="pagination">
-                        {{$produtos->links()}}
+                    <div class="flex justify-between items-center">
+                        <div class="pagination">
+                            {{$produtos->links()}}
+                        </div>
+                        @can('is-admin')
+                            <div>
+                                <x-primary-button class="px-1">
+                                    <a href="{{ route('oryon.new') }}" class="inline-flex items-center">
+                                        <x-lucide-circle-plus class="w-4 h-4 mr-2" />Novo Produto
+                                    </a>
+                                </x-primary-button>
+                                <x-secondary-button>
+                                    <a href="{{ route('oryon.importar') }}" class="inline-flex items-center">
+                                        <x-lucide-download class="w-4 h-4 mr-2" />Importar Produtos
+                                    </a>
+                                </x-secondary-button>
+                            </div>
+                        @endcan
                     </div>
                 </div>
             </div>
@@ -120,5 +108,8 @@
                 });
             });
         });
+        function confirmDelete(nomeProduto) {
+            return confirm("Tem certeza que deseja excluir o produto: " + nomeProduto + "?");
+        }
     </script>
 </x-app-layout>

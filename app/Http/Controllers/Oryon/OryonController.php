@@ -35,15 +35,6 @@ class OryonController extends Controller
         return view('oryon.edit', compact('produto'));
     }
 
-    public function show($id)
-    {
-        if (!$produto = Oryon::find($id)) {
-            return redirect()->route('oryon.index')->with('error', 'Produto não encontrado.');
-        }
-
-        return view('oryon.show', compact('produto'));
-    }
-
     public function destroy($id)
     {
 
@@ -58,7 +49,7 @@ class OryonController extends Controller
         }
         $produto->delete();
 
-        return redirect()->route('oryon.index')->with('success', 'Produto excluído com sucesso!');
+        return redirect()->route('oryon.index')->with('error', 'Produto excluído com sucesso!');
     }
 
     public function update(UpdateOryonRequest $request, $id)
@@ -68,7 +59,7 @@ class OryonController extends Controller
         }
         $produto->update($request->validated());
 
-        return redirect()->route('oryon.index')->with('success', 'Produto atualizado com sucesso!');
+        return back()->with('success', 'Produto atualizado com sucesso!');
     }
 
     public function store(StoreOryonRequest $request)
