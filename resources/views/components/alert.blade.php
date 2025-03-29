@@ -12,11 +12,18 @@
 @endphp
 
 @if ($message)
-<div class="{{ $colorClass }} border-l-4 p-4 mb-4 rounded shadow-md flex justify-between items-center">
-    <p>{{ $message }}</p>
-    <button class="absolute top-2 right-2 text-opacity-70 hover:text-opacity-100 {{ $colorClass }} rounded-full p-1"
-        onclick="this.parentElement.style.display='none'">
-        <x-lucide-x class="w-4 h-4" />
-    </button>
-</div>
+    <div id="al" class="{{ $colorClass }} border-l-4 p-4 mb-4 rounded shadow-md flex justify-between items-center">
+        <p>{{ $message }}</p>
+    </div>
 @endif
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const alert = document.getElementById('al');
+        setTimeout(function () {
+            if (alert) {
+                alert.classList.add('hidden');
+            }
+        }, 4000);
+    });
+</script>

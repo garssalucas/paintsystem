@@ -1,4 +1,3 @@
-@csrf
 <x-alert type="success" :message="session('success')" />
 <section>
     <header>
