@@ -122,7 +122,7 @@ class OryonController extends Controller
             }
 
             // Após importar, pode redirecionar para a página de produtos com sucesso
-            return redirect()->route('oryon.index')->with('success', 'Produtos importados com sucesso!');
+            return redirect()->route('oryon.index')->with('success', 'Produtos atualizados com sucesso!');
         } else {
             return redirect()->route('oryon.index')->with('error', 'Erro ao acessar o arquivo FTP.');
         }

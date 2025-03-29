@@ -51,15 +51,31 @@
                                         <td class="px-6 py-4 whitespace-normal">
                                             {{ number_format($produto->estoque, 0, ',', '.') }}
                                         </td>
-                                        <td class="px-6 py-4 whitespace-normal inline-flex items-center">
+                                        <td class="px-6 py-4 whitespace-normal inline-flex items-center justify-start">
+                                            <x-dropdown>
+                                                <x-slot name="trigger">
+                                                    <a href="#"><x-lucide-eye class="w-4 h-4 mr-2 hover:text-blue-500" /></a>
+                                                </x-slot>
+                                                <x-slot name="content">
+                                                    <x-dropdown-link>
+                                                        Custo: R${{ $produto->preco_compra }}
+                                                    </x-dropdown-link>
+                                                    <x-dropdown-link>
+                                                        Peso: {{ $produto->peso }}Kg
+                                                    </x-dropdown-link>
+                                                    <x-dropdown-link>
+                                                        {{ $produto->fornecedor }}
+                                                    </x-dropdown-link>
+                                                </x-slot>
+                                            </x-dropdown>
                                             <a href="{{ route('oryon.edit', $produto->id) }}"><x-lucide-pencil
-                                                    class="w-4 h-4 mr-2" /></a>
+                                                    class="w-4 h-4 mr-2 hover:text-yellow-300" /></a>
                                             <form action="{{ route('oryon.destroy', $produto->id) }}" method="POST"
                                                 class="inline" onsubmit="return confirmDelete('{{ $produto->descricao }}')">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="focus:outline-none">
-                                                    <x-lucide-trash-2 class="w-4 h-4" />
+                                                <button type="submit">
+                                                    <x-lucide-trash-2 class="w-4 h-4 mt-1 hover:text-red-600" />
                                                 </button>
                                             </form>
                                         </td>
@@ -82,7 +98,7 @@
                                 </x-primary-button>
                                 <x-secondary-button>
                                     <a href="{{ route('oryon.importar') }}" class="inline-flex items-center">
-                                        <x-lucide-download class="w-4 h-4 mr-2" />Importar Produtos
+                                        <x-lucide-download class="w-4 h-4 mr-2" />Atualizar Produtos
                                     </a>
                                 </x-secondary-button>
                             </div>
