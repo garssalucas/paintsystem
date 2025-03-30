@@ -152,7 +152,6 @@ class OryonController extends Controller
                     <td class="px-6 py-4 whitespace-normal">' . number_format($produto->estoque, 0, ',', '.') . '</td>
                     <td class="px-6 py-4 whitespace-normal">
                         <a href="' . route('oryon.edit', $produto->id) . '" class="text-indigo-600 hover:text-indigo-900">Editar</a>
-                        <a href="' . route('oryon.show', $produto->id) . '" class="text-indigo-600 hover:text-indigo-900 ml-2">Detalhes</a>
                     </td>
                 </tr>';
             }
