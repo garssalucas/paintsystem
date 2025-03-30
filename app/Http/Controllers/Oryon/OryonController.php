@@ -27,6 +27,10 @@ class OryonController extends Controller
 
     public function edit($id)
     {
+        if (!auth()->user()->hasRole('gerentes')) {
+            abort(403, 'Voce nao tem permissao para editar produtos.');
+        }
+        
         $produto = Oryon::find($id);
         if (!$produto) {
             return redirect()->route('oryon.index')->with('error', 'Produto não encontrado.');
@@ -38,10 +42,8 @@ class OryonController extends Controller
     public function destroy($id)
     {
 
-        // Verifica se o usuário é administrador é uma segurança extra, mas não é obrigatório pois ja nao consegue acessar a rota de exclusão
-        // o denise verifica se o usuário não tem permissão e o allow verifica se tem permissão
-        if (Gate::denies('is-admin')) {
-            return redirect()->route('oryon.index')->with('error', 'Você não tem permissão para excluir produtos.');
+        if (!auth()->user()->hasRole('administradores')) {
+            abort(403, 'Voce nao tem permissao para excluir produtos.');
         }
 
         if (!$produto = Oryon::find($id)) {

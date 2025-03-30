@@ -55,4 +55,32 @@ class User extends Authenticatable
     {
         return in_array($this->area, config('custom.admins'));
     }
+
+    // Atribuição de papéis quando o usuário for criado
+    protected static function booted()
+    {
+        static::created(function ($user) {
+            $user->assignRoleBasedOnArea();
+        });
+
+        static::updated(function ($user) {
+            $user->assignRoleBasedOnArea();
+        });
+    }
+
+    // Método para atribuir papéis baseado na área
+    public function assignRoleBasedOnArea()
+    {
+        $this->syncRoles([]);
+        // Exemplo de como você pode definir a área, isso pode ser alterado de acordo com sua lógica de negócios
+        if ($this->area === 'administracao') {
+            $this->assignRole('administradores');
+        } elseif ($this->area === 'gerencia') {
+            $this->assignRole('gerentes');
+        } elseif ($this->area === 'laboratorio') {
+            $this->assignRole('laboratorios');
+        } elseif ($this->area === 'vendas') {
+            $this->assignRole('vendedores');
+        }
+    }
 }

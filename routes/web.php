@@ -20,16 +20,14 @@ Route::middleware('auth')->prefix('profile')->group(function () {
 });
 
 Route::middleware('auth')->prefix('oryon')->group(function () {
-    Route::get('/', [OryonController::class, 'index'])->name('oryon.index'); // Para exibir os produtos
-    Route::post('/', [OryonController::class, 'store'])->name('oryon.store'); // Para salvar o produto
-    Route::get('/new', [OryonController::class, 'new'])->name('oryon.new'); // Para exibir o formulário de cadastro
-    Route::get('/importar', [OryonController::class, 'importarProdutos'])->name('oryon.importar'); // Para importar os produtos
+    Route::get('/', [OryonController::class, 'index'])->name('oryon.index'); 
+    Route::post('/', [OryonController::class, 'store'])->name('oryon.store')->middleware('role:gerentes'); 
+    Route::get('/new', [OryonController::class, 'new'])->name('oryon.new')->middleware('role:gerentes'); 
+    Route::get('/importar', [OryonController::class, 'importarProdutos'])->name('oryon.importar'); 
     Route::get('/search', [OryonController::class, 'search'])->name('oryon.search');
-    Route::put('/{id}', [OryonController::class, 'update'])->name('oryon.update');
-    Route::get('/{id}/edit', [OryonController::class, 'edit'])->name('oryon.edit' );
-    Route::delete('/{id}/destroy', [OryonController::class, 'destroy'])->name('oryon.destroy')->middleware(CheckIsAdmin::class);
+    Route::put('/{id}', [OryonController::class, 'update'])->name('oryon.update')->middleware('role:gerentes');
+    Route::get('/{id}/edit', [OryonController::class, 'edit'])->name('oryon.edit' )->middleware('role:gerentes');
+    Route::delete('/{id}/destroy', [OryonController::class, 'destroy'])->name('oryon.destroy')->middleware('role:administradores');
 });
-
-// aqui criei o middleware CheckIsAdmin para verificar se o usuário é admin e pode deletar registros mas posso usar tb para botoes
 
 require __DIR__.'/auth.php';

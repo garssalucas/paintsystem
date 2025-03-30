@@ -48,7 +48,7 @@
                 </div>
             @endif
         </div>
-        @can('is-admin') 
+        @role('administradores')
         <div class="flex space-x-4">
             <div class="flex-1">
                 <x-input-label for="status" :value="__('Status')" />
@@ -160,7 +160,7 @@
                 <x-input-error class="mt-2" :messages="$errors->get('area')" />
             </div>
         </div>
-        @endcan
+        @endrole
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Salvar') }}</x-primary-button>
 

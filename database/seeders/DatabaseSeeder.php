@@ -16,7 +16,12 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // User::factory(10)->create();
-
+        
+        $this->call([
+            CreateRolesSeeder::class,
+            AssignRolesSeeder::class,
+        ]);
+        
         User::factory()->create([
             'name' => 'Lucas Garssa',
             'email' => 'garssa.lucas@gmail.com',
@@ -26,10 +31,7 @@ class DatabaseSeeder extends Seeder
             'area'=> 'administracao',
         ]);
 
-        $this->call([
-            PermissionSeeder::class,
-            AssignPermissionsToUsersSeeder::class,
-        ]);
+        
 
     }
 }

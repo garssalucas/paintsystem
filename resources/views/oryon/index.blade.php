@@ -54,7 +54,8 @@
                                         <td class="px-6 py-4 whitespace-normal inline-flex items-center justify-start">
                                             <x-dropdown>
                                                 <x-slot name="trigger">
-                                                    <a class="cursor-pointer"><x-lucide-eye class="w-4 h-4 mr-2 hover:text-blue-500" /></a>
+                                                    <a class="cursor-pointer"><x-lucide-eye
+                                                            class="w-4 h-4 mr-2 hover:text-blue-500" /></a>
                                                 </x-slot>
                                                 <x-slot name="content">
                                                     <x-dropdown-link>
@@ -89,20 +90,18 @@
                         <div class="pagination">
                             {{$produtos->links()}}
                         </div>
-                        @can('is-admin')
-                            <div>
-                                <x-primary-button class="px-1">
-                                    <a href="{{ route('oryon.new') }}" class="inline-flex items-center">
-                                        <x-lucide-circle-plus class="w-4 h-4 mr-2" />Novo Produto
-                                    </a>
-                                </x-primary-button>
-                                <x-secondary-button>
-                                    <a href="{{ route('oryon.importar') }}" class="inline-flex items-center">
-                                        <x-lucide-download class="w-4 h-4 mr-2" />Atualizar Produtos
-                                    </a>
-                                </x-secondary-button>
-                            </div>
-                        @endcan
+                        <div>
+                            <x-primary-button class="px-1">
+                                <a href="{{ route('oryon.new') }}" class="inline-flex items-center">
+                                    <x-lucide-circle-plus class="w-4 h-4 mr-2" />Novo Produto
+                                </a>
+                            </x-primary-button>
+                            <x-secondary-button>
+                                <a href="{{ route('oryon.importar') }}" class="inline-flex items-center">
+                                    <x-lucide-download class="w-4 h-4 mr-2" />Atualizar Produtos
+                                </a>
+                            </x-secondary-button>
+                        </div>
                     </div>
                 </div>
             </div>
