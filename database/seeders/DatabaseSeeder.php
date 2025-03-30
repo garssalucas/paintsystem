@@ -26,5 +26,10 @@ class DatabaseSeeder extends Seeder
             'area'=> 'administracao',
         ]);
 
+        $this->call([
+            PermissionSeeder::class,
+            AssignPermissionsToUsersSeeder::class,
+        ]);
+
     }
 }
