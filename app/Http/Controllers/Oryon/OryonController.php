@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Oryon;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateOryonRequest;
 use App\Models\Oryon;
-use Illuminate\Support\Facades\Gate;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Ftp\FtpAdapter;
 use League\Flysystem\Ftp\FtpConnectionOptions;
@@ -28,7 +27,7 @@ class OryonController extends Controller
     public function edit($id)
     {
         if (!auth()->user()->hasRole('gerentes')) {
-            abort(403, 'Voce nao tem permissao para editar produtos.');
+            return redirect()->route('oryon.index')->with('error', 'Voce nao tem permissao para editar produtos.');
         }
         
         $produto = Oryon::find($id);
@@ -43,7 +42,7 @@ class OryonController extends Controller
     {
 
         if (!auth()->user()->hasRole('administradores')) {
-            abort(403, 'Voce nao tem permissao para excluir produtos.');
+            return redirect()->route('oryon.index')->with('error', 'Voce nao tem permissao para deletar produtos.');
         }
 
         if (!$produto = Oryon::find($id)) {
@@ -72,7 +71,10 @@ class OryonController extends Controller
     }
 
     public function importarProdutos()
-    {
+    {   
+        if (!$ftpFile = env('FTP_FILE')) {
+            return redirect()->route('oryon.index')->with('error', 'Caminho do arquivo FTP não está configurado corretamente.');
+        }
         // Cria as opções de conexão FTP com FtpConnectionOptions
         $ftpOptions = FtpConnectionOptions::fromArray([
             'host' => env('FTP_HOST'),
