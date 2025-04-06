@@ -43,6 +43,8 @@ class RegisteredUserController extends Controller
             'area' => $request->area,
         ]);
 
+        $user->assignRoleByArea();
+
         event(new Registered($user));
 
         Auth::login($user);

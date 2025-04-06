@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
             AssignRolesSeeder::class,
         ]);
         
-        User::factory()->create([
+        $user = User::factory()->create([
             'name' => 'Lucas Garssa',
             'email' => 'garssa.lucas@gmail.com',
             'password' => Hash::make('bicsin-sanVib-7zethu'),
@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
             'area'=> 'administracao',
         ]);
 
-        
+        $user->assignRoleByArea();
 
     }
 }
