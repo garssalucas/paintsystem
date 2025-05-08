@@ -42,6 +42,12 @@
         </div>
 
         <div>
+            <x-input-label for="codigo_fornecedor" :value="__('Código do Fornecedor:')" />
+            <x-text-input id="codigo_fornecedor" name="codigo_fornecedor" type="text" class="mt-1 block w-full" placeholder="Código do Fornecedor" value="{{ $produto->codigo_fornecedor ?? old('codigo_fornecedor') }}" />
+            <x-input-error class="mt-2" :messages="$errors->get('codigo_fornecedor')" />
+        </div>
+
+        <div>
             <x-input-label for="peso" :value="__('Peso:')" />
             <x-text-input id="peso" name="peso" type="text" class="mt-1 block w-full" placeholder="Peso do Produto" value="{{ $produto->peso ?? old('peso') }}" />
             <x-input-error class="mt-2" :messages="$errors->get('peso')" />

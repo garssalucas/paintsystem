@@ -105,7 +105,7 @@ class OryonController extends Controller
             foreach ($lines as $line) {
                 $columns = str_getcsv($line, ';'); // Considerando que o separador é ponto e vírgula
 
-                if (count($columns) == 9 && !empty($columns[0])) {  // Verifica se o arquivo tem o número correto de colunas
+                if (count($columns) == 10 && !empty($columns[0])) {  // Verifica se o arquivo tem o número correto de colunas
                     // Faz o mapeamento dos dados
                     $produtoData = [
                         'codigo' => $columns[0],
@@ -114,8 +114,9 @@ class OryonController extends Controller
                         'categoria' => $columns[3],
                         'fornecedor' => $columns[4],
                         'peso' => empty($columns[5]) ? null : str_replace(',', '.', $columns[5]),  // Verifica se 'peso' está vazio e usa NULL
-                        'preco_compra' => str_replace(',', '.', $columns[6]),  // Substitui vírgula por ponto
-                        'estoque' => str_replace(',', '.', $columns[7]),
+                        'codigo_fornecedor' => $columns[6],
+                        'preco_compra' => str_replace(',', '.', $columns[7]),  // Substitui vírgula por ponto
+                        'estoque' => str_replace(',', '.', $columns[8]),
                     ];
                     // Verifica se o produto já existe no banco de dados
                     $produto = Oryon::updateOrCreate(

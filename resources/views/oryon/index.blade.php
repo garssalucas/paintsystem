@@ -67,6 +67,9 @@
                                                     <x-dropdown-link>
                                                         {{ $produto->fornecedor }}
                                                     </x-dropdown-link>
+                                                    <x-dropdown-link>
+                                                        {{ $produto->codigo_fornecedor }}
+                                                    </x-dropdown-link>
                                                 </x-slot>
                                             </x-dropdown>
                                             <a href="{{ route('oryon.edit', $produto->id) }}"><x-lucide-pencil

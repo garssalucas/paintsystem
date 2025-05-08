@@ -10,5 +10,5 @@ class Oryon extends Model
     //use SoftDeletes;
     protected $table = 'oryons';
     //quais colunas podem ser preenchidas:
-    protected $fillable = ['codigo', 'descricao', 'preco', 'categoria', 'fornecedor', 'peso', 'preco_compra', 'estoque']; 
+    protected $fillable = ['codigo', 'descricao', 'preco', 'categoria', 'fornecedor', 'peso', 'codigo_fornecedor', 'preco_compra', 'estoque']; 
 }

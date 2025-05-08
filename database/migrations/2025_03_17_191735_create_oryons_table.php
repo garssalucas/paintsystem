@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('oryons', function (Blueprint $table) {
             $table->id();
-            $table->string('codigo',20)->unique();
+            $table->string('codigo',25)->unique();
             $table->string('descricao',128);
             $table->decimal('preco', 10, 2)->nullable();
             $table->string('categoria',64);
             $table->string('fornecedor',64);
             $table->decimal('peso', 8, 2)->nullable();
+            $table->string('codigo_fornecedor',64)->nullable();
             $table->decimal('preco_compra', 10, 2)->nullable();
             $table->decimal('estoque', 10, 2)->nullable();
             //$table->softDeletes();
