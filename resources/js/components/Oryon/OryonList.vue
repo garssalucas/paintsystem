@@ -29,7 +29,7 @@
                   <th
                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Estoque</th>
-                  <th
+                  <th v-if="hasRole('administradores')"
                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Ações</th>
                 </tr>
@@ -44,7 +44,7 @@
                   <td class="px-6 py-4 whitespace-normal">R$ {{ formatPreco(produto.preco) }}</td>
                   <td class="px-6 py-4 whitespace-normal">{{ produto.categoria }}</td>
                   <td class="px-6 py-4 whitespace-normal">{{ formatEstoque(produto.estoque) }}</td>
-                  <td class="px-6 py-4 whitespace-normal inline-flex items-center justify-start space-x-2">
+                  <td v-if="hasRole('administradores')" class="px-6 py-4 whitespace-normal inline-flex items-center justify-start space-x-2">
                     <!-- Visualizar -->
                     <details title="Detalhes">
                       <summary class="list-none appearance-none cursor-pointer">👁️</summary>
@@ -93,6 +93,9 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
+import { useRole } from '../../composables/useRole'
+
+const { fetchRoles, hasRole } = useRole()
 
 const produtos = ref([])
 const search = ref('')
@@ -127,5 +130,8 @@ async function excluirProduto(produto) {
   }
 }
 
-onMounted(loadProdutos)
+onMounted(() => {
+  fetchRoles()
+  loadProdutos()
+})
 </script>
