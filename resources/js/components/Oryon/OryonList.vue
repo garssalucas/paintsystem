@@ -94,6 +94,7 @@ const search = ref('')
 
 const loadProdutos = async () => {
   try {
+    await axios.get('/sanctum/csrf-cookie')
     const response = await axios.get('/api/produtos_oryon')
     produtos.value = response.data
   } catch (error) {
