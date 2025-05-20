@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Oryon;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Oryon;
+use Illuminate\Support\Facades\Auth;
 
 class OryonControllerVue extends Controller
 {
@@ -15,26 +16,80 @@ class OryonControllerVue extends Controller
 
     public function store(Request $request)
     {
+        if (!auth()->user()->hasRole('administradores')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Acesso negado. Apenas administradores podem cadastrar produtos.'
+            ], 403);
+        }
+
         $oryon = Oryon::create($request->all());
-        return response()->json($oryon, 201);
+
+        return response()->json([
+            'success' => true,
+            'message' => "Produto '{$oryon->codigo} - {$oryon->descricao}' criado com sucesso.",
+            'produto' => $oryon
+        ], 201);
     }
 
     public function show($id)
     {
-        return response()->json(Oryon::findOrFail($id));
+        $oryon = Oryon::findOrFail($id);
+        return response()->json($oryon);
     }
 
     public function update(Request $request, $id)
     {
+        if (!auth()->user()->hasRole('administradores')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Acesso negado. Apenas administradores podem atualizar produtos.'
+            ], 403);
+        }
+
         $oryon = Oryon::findOrFail($id);
         $oryon->update($request->all());
-        return response()->json($oryon);
+
+        return response()->json([
+            'success' => true,
+            'message' => "Produto '{$oryon->codigo} - {$oryon->descricao}' atualizado com sucesso.",
+            'produto' => $oryon
+        ]);
     }
 
     public function destroy($id)
     {
-        $oryon = Oryon::findOrFail($id);
-        $oryon->delete();
-        return response()->json(['message' => 'Produto deletado com sucesso.']);
+        if (!auth()->user()->hasRole('administradores')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Acesso negado. Apenas administradores podem excluir produtos.'
+            ], 403);
+        }
+
+        $oryon = Oryon::find($id);
+
+        if (!$oryon) {
+            return response()->json([
+                'success' => false,
+                'message' => "Produto ID {$id} não encontrado."
+            ], 404);
+        }
+
+        $codigo = $oryon->codigo;
+        $descricao = $oryon->descricao;
+
+        try {
+            $oryon->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => "Produto '{$descricao} | Código: {$codigo}' excluído com sucesso."
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => "Erro ao excluir '{$descricao} | Código: {$codigo}' " . $e->getMessage()
+            ], 500);
+        }
     }
 }

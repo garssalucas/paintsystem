@@ -52,7 +52,7 @@
                     </a>
                     <!-- Excluir -->
                     <button
-                      @click="confirmDelete(produto)"
+                      @click="excluirProduto(produto)"
                       class="text-red-600 hover:text-red-800 mt-1"
                       title="Excluir"
                     >
@@ -92,7 +92,7 @@ import axios from 'axios'
 const produtos = ref([])
 const search = ref('')
 
-const loadProdutos = async () => {
+async function loadProdutos() {
   try {
     await axios.get('/sanctum/csrf-cookie')
     const response = await axios.get('/api/produtos_oryon')
@@ -110,10 +110,15 @@ const formatEstoque = (valor) => {
   return parseInt(valor).toLocaleString('pt-BR')
 }
 
-const confirmDelete = (produto) => {
-  if (confirm(`Deseja mesmo excluir o produto "${produto.descricao}"?`)) {
-    // Implementar chamada de DELETE se desejar
-    alert('Ainda não implementado.')
+async function excluirProduto(produto) {
+  if (!confirm(`Deseja excluir o produto "${produto.descricao} | Código: ${produto.codigo}"?`)) return
+
+  try {
+    const res = await axios.delete(`/api/produtos_oryon/${produto.id}`)
+    alert(res.data.message)
+    produtos.value = produtos.value.filter(p => p.id !== produto.id)
+  } catch (err) {
+    alert(err.response?.data?.message || 'Erro ao excluir produto')
   }
 }
 
