@@ -35,20 +35,22 @@
                 </tr>
               </thead>
               <tbody class="bg-white dark:bg-gray-600 divide-y divide-gray-200 dark:divide-gray-500">
-                <tr v-for="produto in produtos" :key="produto.id" :class="{
-                  'bg-white dark:bg-gray-800': produto.id % 2 !== 0,
-                  'bg-gray-200 dark:bg-gray-700': produto.id % 2 === 0,
+                <tr v-for="(produto, index) in produtosFiltrados" :key="produto.id" :class="{
+                  'bg-white dark:bg-gray-800': index % 2 === 0,
+                  'bg-gray-200 dark:bg-gray-700': index % 2 !== 0,
                 }">
                   <td class="px-6 py-4 whitespace-normal">{{ produto.codigo }}</td>
                   <td class="px-6 py-4 whitespace-normal">{{ produto.descricao }}</td>
                   <td class="px-6 py-4 whitespace-normal">R$ {{ formatPreco(produto.preco) }}</td>
                   <td class="px-6 py-4 whitespace-normal">{{ produto.categoria }}</td>
                   <td class="px-6 py-4 whitespace-normal">{{ formatEstoque(produto.estoque) }}</td>
-                  <td v-if="hasRole('administradores')" class="px-6 py-4 whitespace-normal inline-flex items-center justify-start space-x-2">
+                  <td v-if="hasRole('administradores')"
+                    class="px-6 py-4 whitespace-normal inline-flex items-center justify-start space-x-2">
                     <!-- Visualizar -->
                     <details title="Detalhes">
                       <summary class="list-none appearance-none cursor-pointer">👁️</summary>
-                      <div class="absolute z-10 mt-1 bg-white dark:bg-gray-800 border rounded shadow text-sm p-2 space-y-1 w-56">
+                      <div
+                        class="absolute z-10 mt-1 bg-white dark:bg-gray-800 border rounded shadow text-sm p-2 space-y-1 w-56">
                         <p><strong>Custo:</strong> R$ {{ formatPreco(produto.preco_compra) }}</p>
                         <p><strong>Peso:</strong> {{ produto.peso }}Kg</p>
                         <p><strong>Fornecedor:</strong> {{ produto.fornecedor }}</p>
@@ -91,15 +93,25 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import axios from 'axios'
 import { useRole } from '../../composables/useRole'
 
 const { fetchRoles, hasRole } = useRole()
-
 const produtos = ref([])
 const search = ref('')
+const produtosFiltrados = computed(() => {
+  if (!search.value.trim()) return [...produtos.value].sort((a, b) => a.descricao.localeCompare(b.descricao))
 
+  const palavras = search.value.toLowerCase().split(/\s+/)
+
+  return produtos.value
+    .filter(produto => {
+      const texto = `${produto.codigo} ${produto.descricao}`.toLowerCase()
+      return palavras.every(palavra => texto.includes(palavra))
+    })
+    .sort((a, b) => a.descricao.localeCompare(b.descricao))
+})
 async function loadProdutos() {
   try {
     await axios.get('/sanctum/csrf-cookie')
