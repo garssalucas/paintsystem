@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('descricao',128);
             $table->decimal('preco', 10, 2)->nullable();
             $table->string('categoria',64);
-            $table->string('fornecedor',64);
+            $table->string('fornecedor',64)->nullable();
             $table->decimal('peso', 8, 2)->nullable();
             $table->string('codigo_fornecedor',64)->nullable();
             $table->decimal('preco_compra', 10, 2)->nullable();

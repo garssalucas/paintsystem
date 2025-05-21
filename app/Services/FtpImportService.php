@@ -14,58 +14,118 @@ class FtpImportService
         if (!$ftpFile = env('FTP_FILE')) {
             return ['success' => false, 'message' => 'Arquivo FTP não configurado.'];
         }
-        // Cria as opções de conexão FTP com FtpConnectionOptions
+
         $ftpOptions = FtpConnectionOptions::fromArray([
             'host' => env('FTP_HOST'),
             'username' => env('FTP_USER'),
             'password' => env('FTP_PASS'),
-            'port' => (int) env('FTP_PORT'),  // Garantindo que o valor de port seja um inteiro
+            'port' => (int) env('FTP_PORT'),
             'root' => env('FTP_ROOT'),
             'passive' => true,
             'ssl' => false,
         ]);
 
-        // Cria o adaptador FTP com as opções corretas
-        $adapter = new FtpAdapter($ftpOptions);  // Passando o objeto FtpConnectionOptions
+        $adapter = new FtpAdapter($ftpOptions);
         $filesystem = new Filesystem($adapter);
 
-        // Caminho para o arquivo no servidor FTP
-        $ftpFile = env('FTP_FILE');
-
-        // Obtém o conteúdo do arquivo
         if ($filesystem->has($ftpFile)) {
             $content = $filesystem->read($ftpFile);
-            // Garante que o conteúdo esteja em UTF-8 para evitar problemas com acentos
             $content = mb_convert_encoding($content, 'UTF-8', 'ISO-8859-1');
 
-            $lines = explode("\n", $content);
-            array_shift($lines);
-            // Converte o conteúdo do arquivo para um array
-            foreach ($lines as $line) {
-                $columns = str_getcsv($line, ';'); // Considerando que o separador é ponto e vírgula
+            $lines = array_filter(array_map('trim', explode("\n", $content)));
 
-                if (count($columns) == 10 && !empty($columns[0])) {  // Verifica se o arquivo tem o número correto de colunas
-                    // Faz o mapeamento dos dados
-                    $produtoData = [
-                        'codigo' => $columns[0],
-                        'descricao' => $columns[1],
-                        'preco' => str_replace(',', '.', $columns[2]),  // Substitui vírgula por ponto
-                        'categoria' => $columns[3],
-                        'fornecedor' => $columns[4],
-                        'peso' => empty($columns[5]) ? null : str_replace(',', '.', $columns[5]),  // Verifica se 'peso' está vazio e usa NULL
-                        'codigo_fornecedor' => $columns[6],
-                        'preco_compra' => str_replace(',', '.', $columns[7]),  // Substitui vírgula por ponto
-                        'estoque' => str_replace(',', '.', $columns[8]),
-                    ];
-                    // Verifica se o produto já existe no banco de dados
-                    $produto = Oryon::updateOrCreate(
-                        ['codigo' => $produtoData['codigo']],  // Verifica pelo código
-                        $produtoData  // Atualiza ou cria com os dados do arquivo
-                    );
+            if (empty($lines)) {
+                return ['success' => false, 'message' => 'Arquivo vazio ou inválido.'];
+            }
+
+            $header = str_getcsv(array_shift($lines), ';');
+            $headerMap = [];
+
+            foreach ($header as $index => $col) {
+                $normalized = $this->normalizeHeader($col);
+                switch ($normalized) {
+                    case 'codigo':
+                    case 'descricao':
+                    case 'preco':
+                    case 'categoria':
+                    case 'fornecedor':
+                    case 'peso':
+                    case 'codigo_forn':
+                    case 'preco_compra':
+                    case 'estoque':
+                        $headerMap[$normalized] = $index;
+                        break;
                 }
             }
+
+            $required = ['codigo', 'descricao', 'preco', 'categoria', 'fornecedor', 'peso', 'codigo_forn', 'preco_compra', 'estoque'];
+            foreach ($required as $req) {
+                if (!array_key_exists($req, $headerMap)) {
+                    return [
+                        'success' => false,
+                        'message' => "Coluna obrigatória '{$req}' não encontrada no cabeçalho."
+                    ];
+                }
+            }
+
+            foreach ($lines as $lineNumber => $line) {
+                $columns = str_getcsv($line, ';');
+
+                // Validação dos campos obrigatórios
+                $missing = [];
+
+                foreach (['codigo', 'descricao', 'categoria', 'preco'] as $requiredField) {
+                    $index = $headerMap[$requiredField];
+
+                    if (!isset($columns[$index]) || trim($columns[$index]) === '') {
+                        $missing[] = $requiredField;
+                    }
+                }
+
+                if (!empty($missing)) {
+                    return [
+                        'success' => false,
+                        'message' => "Erro na linha " . ($lineNumber + 2) . ": campos obrigatórios ausentes → " . implode(', ', $missing)
+                    ];
+                }
+
+                $produtoData = [
+                    'codigo' => $columns[$headerMap['codigo']],
+                    'descricao' => $columns[$headerMap['descricao']],
+                    'preco' => (!empty($columns[$headerMap['preco']]) && is_numeric(str_replace(',', '.', $columns[$headerMap['preco']])))
+                        ? str_replace(',', '.', $columns[$headerMap['preco']])
+                        : null,
+                    'categoria' => $columns[$headerMap['categoria']],
+                    'fornecedor' => $columns[$headerMap['fornecedor']],
+                    'peso' => (!empty($columns[$headerMap['peso']]) && is_numeric(str_replace(',', '.', $columns[$headerMap['peso']])))
+                        ? str_replace(',', '.', $columns[$headerMap['peso']])
+                        : null,
+                    'codigo_fornecedor' => $columns[$headerMap['codigo_forn']] ?? null,
+                    'preco_compra' => (!empty($columns[$headerMap['preco_compra']]) && is_numeric(str_replace(',', '.', $columns[$headerMap['preco_compra']])))
+                        ? str_replace(',', '.', $columns[$headerMap['preco_compra']])
+                        : null,
+                    'estoque' => (!empty($columns[$headerMap['estoque']]) && is_numeric(str_replace(',', '.', $columns[$headerMap['estoque']])))
+                        ? str_replace(',', '.', $columns[$headerMap['estoque']])
+                        : null,
+                ];
+
+                Oryon::updateOrCreate(
+                    ['codigo' => $produtoData['codigo']],
+                    $produtoData
+                );
+            }
+
             return ['success' => true, 'message' => 'Produtos atualizados com sucesso!'];
         }
+
         return ['success' => false, 'message' => 'Arquivo não encontrado no FTP.'];
+    }
+
+    private function normalizeHeader($header)
+    {
+        $header = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $header);  // Transforma acentos
+        $header = mb_strtolower($header);
+        $header = preg_replace('/[^a-z0-9_]/u', '', $header);
+        return $header;
     }
 }
