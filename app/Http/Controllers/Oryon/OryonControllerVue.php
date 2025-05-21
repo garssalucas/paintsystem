@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Oryon;
 
 use App\Http\Controllers\Controller;
+use App\Services\FtpImportService;
 use Illuminate\Http\Request;
 use App\Models\Oryon;
 use Illuminate\Support\Facades\Auth;
@@ -90,6 +91,17 @@ class OryonControllerVue extends Controller
                 'success' => false,
                 'message' => "Erro ao excluir '{$descricao} | Código: {$codigo}' " . $e->getMessage()
             ], 500);
+        }
+    }
+    
+    public function importar(FtpImportService $ftpImportService)
+    {
+        $resultado = $ftpImportService->import();
+
+        if ($resultado['success']) {
+            return response()->json(['message' => $resultado['message']], 200);
+        } else {
+            return response()->json(['message' => $resultado['message']], 500);
         }
     }
 }

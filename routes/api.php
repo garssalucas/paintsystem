@@ -17,4 +17,5 @@ Route::middleware(['auth:sanctum'])->prefix('produtos_oryon')->group(function ()
     Route::get('/{id}', [OryonControllerVue::class, 'show']);
     Route::put('/{id}', [OryonControllerVue::class, 'update']);
     Route::delete('/{id}', [OryonControllerVue::class, 'destroy']);
+    Route::post('/importar', [OryonControllerVue::class, 'importar']);
 });

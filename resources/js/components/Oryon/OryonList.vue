@@ -89,10 +89,10 @@
                 class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 flex items-center">
                 ➕ Novo Produto
               </a>
-              <a href="/oryon/importar"
+              <button @click="importarProdutos"
                 class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 flex items-center">
                 ⬇️ Atualizar Produtos
-              </a>
+              </button>
             </div>
           </div>
         </div>
@@ -166,6 +166,18 @@ async function excluirProduto(produto) {
     produtos.value = produtos.value.filter(p => p.id !== produto.id)
   } catch (err) {
     alert(err.response?.data?.message || 'Erro ao excluir produto')
+  }
+}
+
+async function importarProdutos() {
+  if (!confirm('Tem certeza que deseja atualizar os produtos?')) return
+
+  try {
+    const res = await axios.post('/api/produtos_oryon/importar')
+    alert(res.data.message)
+    loadProdutos()  
+  } catch (err) {
+    alert(err.response?.data?.message || 'Erro ao importar produtos')
   }
 }
 
