@@ -35,7 +35,7 @@
                 </tr>
               </thead>
               <tbody class="bg-white dark:bg-gray-600 divide-y divide-gray-200 dark:divide-gray-500">
-                <tr v-for="(produto, index) in produtosFiltrados" :key="produto.id" :class="{
+                <tr v-for="(produto, index) in produtosPaginados" :key="produto.id" :class="{
                   'bg-white dark:bg-gray-800': index % 2 === 0,
                   'bg-gray-200 dark:bg-gray-700': index % 2 !== 0,
                 }">
@@ -68,13 +68,22 @@
               </tbody>
             </table>
           </div>
-
-          <!-- Ações extras -->
           <div class="flex justify-between items-center mt-6">
-            <!-- Paginador (futuro) -->
-            <div class="pagination text-gray-700 dark:text-gray-300">Paginação aqui (implementação futura)</div>
-
-            <!-- Botões -->
+            <div class="flex justify-between items-center mt-4">
+              <div class="flex items-center space-x-2">
+                <span>Exibindo {{ exibindoDe }} até {{ exibindoAte }} de {{ total }} produtos</span>
+                <div class="relative inline-block">
+                  <select v-model="perPage" class="appearance-none border rounded p-1 pr-8 bg-gray-900 text-gray-300">
+                    <option :value="30">30</option>
+                    <option :value="50">50</option>
+                    <option :value="100">100</option>
+                    <option :value="200">200</option>
+                  </select>
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-300">
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="flex space-x-2">
               <a href="/oryon/new"
                 class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 flex items-center">
@@ -93,18 +102,21 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import axios from 'axios'
 import { useRole } from '../../composables/useRole'
 
 const { fetchRoles, hasRole } = useRole()
+
 const produtos = ref([])
 const search = ref('')
-const produtosFiltrados = computed(() => {
-  if (!search.value.trim()) return [...produtos.value].sort((a, b) => a.descricao.localeCompare(b.descricao))
+const perPage = ref(30)
+const currentPage = ref(1)
 
+const total = computed(() => produtosFiltradosOrdenados.value.length)
+
+const produtosFiltradosOrdenados = computed(() => {
   const palavras = search.value.toLowerCase().split(/\s+/)
-
   return produtos.value
     .filter(produto => {
       const texto = `${produto.codigo} ${produto.descricao}`.toLowerCase()
@@ -112,6 +124,21 @@ const produtosFiltrados = computed(() => {
     })
     .sort((a, b) => a.descricao.localeCompare(b.descricao))
 })
+
+const produtosPaginados = computed(() => {
+  const start = (currentPage.value - 1) * perPage.value
+  const end = start + perPage.value
+  return produtosFiltradosOrdenados.value.slice(start, end)
+})
+
+const exibindoDe = computed(() => {
+  return total.value === 0 ? 0 : (currentPage.value - 1) * perPage.value + 1
+})
+
+const exibindoAte = computed(() => {
+  return Math.min(currentPage.value * perPage.value, total.value)
+})
+
 async function loadProdutos() {
   try {
     await axios.get('/sanctum/csrf-cookie')
