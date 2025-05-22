@@ -1,15 +1,5 @@
 <x-alert type="success" :message="session('success')" />
 <section>
-    <header>
-        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-            {{ __('Informações do Produto ') }} -> {{ $produto->descricao }}
-        </h2>
-
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            {{ __('Atualize abaixo as informações do produto') }}
-        </p>
-    </header>
-    <br>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
             <x-input-label for="codigo" :value="__('Código:')" />

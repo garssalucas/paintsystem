@@ -22,7 +22,7 @@ class StoreOryonRequest extends FormRequest
                 Rule::unique('oryons', 'codigo')->ignore($this->route('id'))
             ],
             'descricao' => 'required|string|max:128',
-            'preco' => 'nullable|numeric|min:0|max:99999999.99',
+            'preco' => 'required|numeric|min:0|max:99999999.99',
             'categoria' => 'required|string|max:64',
             'fornecedor' => 'required|string|max:64',
             'peso' => 'nullable|numeric|min:0|max:999999.99',
