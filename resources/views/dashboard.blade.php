@@ -6,6 +6,5 @@
     </x-slot>
 
     <div id="app">
-        <oryon-list></oryon-list>
     </div>
 </x-app-layout>

@@ -30,4 +30,9 @@ Route::middleware('auth')->prefix('oryon')->group(function () {
     Route::delete('/{id}/destroy', [OryonController::class, 'destroy'])->name('oryon.destroy');
 });
 
+
+Route::middleware('auth')->get('/{any}', function () {
+    return view('dashboard');
+})->where('any', '.*');
+
 require __DIR__.'/auth.php';

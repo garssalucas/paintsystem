@@ -57,9 +57,9 @@
                         <p><strong>Cód. Fornecedor:</strong> {{ produto.codigo_fornecedor }}</p>
                       </div>
                     </details>
-                    <a :href="`/oryon/${produto.id}/edit`" title="Editar">
+                    <router-link :to="`/produtos_oryon/${produto.id}/edit`" title="Editar">
                       ✏️
-                    </a>
+                    </router-link>
                     <button @click="excluirProduto(produto)" title="Excluir">
                       🗑️
                     </button>
@@ -85,10 +85,10 @@
               </div>
             </div>
             <div class="flex space-x-2">
-              <a href="/oryon/new"
+              <router-link :to="'/produtos_oryon/new'"
                 class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 flex items-center">
                 ➕ Novo Produto
-              </a>
+              </router-link>
               <button @click="importarProdutos"
                 class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 flex items-center">
                 ⬇️ Atualizar Produtos
@@ -175,7 +175,7 @@ async function importarProdutos() {
   try {
     const res = await axios.post('/api/produtos_oryon/importar')
     alert(res.data.message)
-    loadProdutos()  
+    loadProdutos()
   } catch (err) {
     alert(err.response?.data?.message || 'Erro ao importar produtos')
   }
