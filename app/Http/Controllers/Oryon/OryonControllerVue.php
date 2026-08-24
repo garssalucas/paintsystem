@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Oryon;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreOryonRequest;
 use App\Services\FtpImportService;
 use Illuminate\Http\Request;
 use App\Models\Oryon;
@@ -15,7 +16,7 @@ class OryonControllerVue extends Controller
         return response()->json(Oryon::all());
     }
 
-    public function store(Request $request)
+    public function store(StoreOryonRequest $request)
     {
         if (!auth()->user()->hasRole('administradores')) {
             return response()->json([
@@ -24,7 +25,7 @@ class OryonControllerVue extends Controller
             ], 403);
         }
 
-        $oryon = Oryon::create($request->all());
+        $oryon = Oryon::create($request->validated());
 
         return response()->json([
             'success' => true,

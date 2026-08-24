@@ -18,7 +18,7 @@ class StoreOryonRequest extends FormRequest
             'codigo' => [
                 'required',
                 'string',
-                'max:20',
+                'max:25',
                 Rule::unique('oryons', 'codigo')->ignore($this->route('id'))
             ],
             'descricao' => 'required|string|max:128',
