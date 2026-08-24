@@ -18,7 +18,7 @@ services:
         image: nginx:alpine
         restart: unless-stopped
         ports:
-            - "8000:80"
+            - "8090:80"
         volumes:
             - ./:/var/www
             - ./docker/nginx/:/etc/nginx/conf.d/
@@ -48,7 +48,7 @@ services:
         platform: linux/x86_64
         restart: unless-stopped
         ports:
-            - "8080:80"
+            - "8081:80"
         environment:
             PMA_HOST: db
             PMA_PORT: 3306
@@ -59,6 +59,7 @@ services:
     # redis
     redis:
         image: redis:latest
+        restart: unless-stopped
         networks:
             - laravel
 
